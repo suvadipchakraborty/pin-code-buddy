@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>PIN Code Buddy — instant Indian PIN code lookup</title>
+<meta name="description" content="Type any 6-digit Indian PIN code and instantly see the post office, district, state and delivery status. No sign-up, no clutter." />
+<meta name="theme-color" content="#1B2A4A" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#FBF6EC" media="(prefers-color-scheme: light)" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="PIN Code Buddy — instant Indian PIN code lookup" />
+<meta property="og:description" content="Type a 6-digit PIN code, get the post office, district, state and delivery status instantly." />
+<meta property="og:url" content="https://pin-code-buddy.suvadipchakraborty.workers.dev/" />
+<meta property="og:image" content="https://pin-code-buddy.suvadipchakraborty.workers.dev/assets/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="PIN Code Buddy" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="PIN Code Buddy — instant Indian PIN code lookup" />
+<meta name="twitter:description" content="Type a 6-digit PIN code, get the post office, district, state and delivery status instantly." />
+<meta name="twitter:image" content="https://pin-code-buddy.suvadipchakraborty.workers.dev/assets/og-image.png" />
+
+<link rel="canonical" href="https://pin-code-buddy.suvadipchakraborty.workers.dev/" />
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="icon" href="/assets/favicon.ico" sizes="any" />
+<link rel="icon" href="/assets/icon-192.png" type="image/png" />
+<link rel="apple-touch-icon" href="/assets/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="PIN Buddy" />
+<meta name="mobile-web-app-capable" content="yes" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ================= HOME TAB ================= -->
+  <main id="panel-home" class="panel" data-panel="home" aria-labelledby="tab-home">
+
+    <header class="hero">
+      <div class="hero-top">
+        <span class="wordmark">PIN&nbsp;Code&nbsp;Buddy</span>
+        <span class="wordmark-sub">India Post lookup</span>
+      </div>
+
+      <div class="postmark" id="postmark" aria-hidden="true">
+        <svg viewBox="0 0 160 160" class="postmark-ring">
+          <circle cx="80" cy="80" r="74" class="ring-outer" />
+          <circle cx="80" cy="80" r="62" class="ring-inner" />
+          <path id="postmark-arc-top" class="ring-text-path" d="M 26 80 A 54 54 0 0 1 134 80" />
+          <path id="postmark-arc-bottom" class="ring-text-path" d="M 134 84 A 54 54 0 0 1 26 84" />
+          <text class="ring-label">
+            <textPath href="#postmark-arc-top" startOffset="50%" text-anchor="middle">INDIA POST</textPath>
+          </text>
+          <text class="ring-label ring-label-bottom">
+            <textPath href="#postmark-arc-bottom" startOffset="50%" text-anchor="middle">PIN CODE BUDDY</textPath>
+          </text>
+        </svg>
+        <div class="postmark-digits" id="postmark-digits" aria-hidden="true">
+          <span class="digit-slot" data-slot="0"></span>
+          <span class="digit-slot" data-slot="1"></span>
+          <span class="digit-slot" data-slot="2"></span>
+          <span class="digit-slot" data-slot="3"></span>
+          <span class="digit-slot" data-slot="4"></span>
+          <span class="digit-slot" data-slot="5"></span>
+        </div>
+      </div>
+
+      <p class="hero-hint">Type any 6-digit PIN code below. We'll fetch the post office, district, state and delivery status — straight from India Post's own records.</p>
+    </header>
+
+    <section class="search" aria-label="PIN code search">
+      <form id="pin-form" autocomplete="off" novalidate>
+        <label for="pin-input" class="sr-only">6-digit PIN code</label>
+        <div class="input-shell" id="input-shell">
+          <input
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="6"
+            id="pin-input"
+            name="pin"
+            placeholder="e.g. 700016"
+            aria-describedby="pin-error"
+          />
+          <button type="submit" class="go-btn" id="go-btn" aria-label="Look up PIN code">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <p id="pin-error" class="input-error" role="alert" hidden></p>
+      </form>
+
+      <div class="recent" id="recent-wrap" hidden>
+        <span class="recent-label">Recent</span>
+        <div class="recent-chips" id="recent-chips"></div>
+      </div>
+    </section>
+
+    <section class="results" id="results" aria-live="polite">
+      <!-- Empty state -->
+      <div class="state state-empty" id="state-empty">
+        <svg viewBox="0 0 64 64" width="46" height="46" aria-hidden="true" class="state-icon">
+          <rect x="8" y="16" width="48" height="34" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M8 18l24 18 24-18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p>Nothing looked up yet. Enter a PIN code above to get started.</p>
+      </div>
+
+      <!-- Skeleton loading state -->
+      <div class="state state-loading" id="state-loading" hidden>
+        <div class="skel-card">
+          <div class="skel-line w-40"></div>
+          <div class="skel-line w-70"></div>
+          <div class="skel-line w-55"></div>
+          <div class="skel-pill"></div>
+        </div>
+        <div class="skel-card">
+          <div class="skel-line w-40"></div>
+          <div class="skel-line w-70"></div>
+          <div class="skel-line w-55"></div>
+          <div class="skel-pill"></div>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div class="state state-error" id="state-error" hidden>
+        <svg viewBox="0 0 64 64" width="46" height="46" aria-hidden="true" class="state-icon">
+          <circle cx="32" cy="32" r="24" fill="none" stroke="currentColor" stroke-width="2.5"/>
+          <path d="M32 20v16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="32" cy="44" r="2.6" fill="currentColor"/>
+        </svg>
+        <p id="error-message">That PIN code didn't turn up any post offices. Double-check the digits and try again.</p>
+      </div>
+
+      <!-- Results list -->
+      <div class="state state-results" id="state-results" hidden>
+        <div class="results-summary" id="results-summary"></div>
+        <ul class="card-list" id="card-list"></ul>
+      </div>
+    </section>
+
+    <div class="tab-footer">
+      <span>Built by Suva</span>
+      <a id="feedback-link-home" class="feedback-link" href="#" aria-label="Send feedback by email">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden="true"><path d="M3.5 6.5h17v11h-17z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Feedback
+      </a>
+    </div>
+  </main>
+
+  <!-- ================= ABOUT TAB ================= -->
+  <main id="panel-about" class="panel" data-panel="about" hidden aria-labelledby="tab-about">
+    <header class="about-hero">
+      <h1>About PIN Code Buddy</h1>
+      <p class="about-lede">A dead-simple utility for one job, done fast: turn a 6-digit Indian PIN code into the post office, district, state and delivery status behind it.</p>
+    </header>
+
+    <section class="about-block">
+      <h2>Why it exists</h2>
+      <p>Most PIN lookup pages bury a simple answer under ads, forms and sign-ups. PIN Code Buddy skips all of it — open the page, type six digits, get your answer. There's nothing to install and nothing to configure.</p>
+    </section>
+
+    <section class="about-block">
+      <h2>Where the data comes from</h2>
+      <p>Every lookup calls India Post's own public PIN code records in real time via <code>api.postalpincode.in</code>. Nothing is cached on a server or guessed — you're seeing the same data India Post publishes.</p>
+    </section>
+
+    <section class="about-block">
+      <h2>Good to know</h2>
+      <ul class="about-list">
+        <li>Works offline for your last few searches once installed — add it to your home screen from your browser's share menu.</li>
+        <li>Your recent searches stay on your device only; nothing is sent anywhere except the PIN code you look up.</li>
+        <li>A single PIN code can cover several post offices (a "cluster") — every branch office and sub office sharing it is listed.</li>
+      </ul>
+    </section>
+
+    <section class="about-block">
+      <h2>Built by</h2>
+      <p>Suva made this as a small, useful thing. Found a bug, or a PIN code that doesn't resolve right? Get in touch below.</p>
+    </section>
+
+    <div class="tab-footer">
+      <span>Built by Suva</span>
+      <a id="feedback-link-about" class="feedback-link" href="#" aria-label="Send feedback by email">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" aria-hidden="true"><path d="M3.5 6.5h17v11h-17z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Feedback
+      </a>
+    </div>
+  </main>
+
+  <!-- ================= TAB BAR ================= -->
+  <nav class="tab-bar" aria-label="Primary">
+    <button class="tab-btn" id="tab-home" data-target="home" aria-current="page">
+      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" aria-hidden="true"><path d="M4 11.5L12 4l8 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 10v9h11v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="tab-btn" id="tab-about" data-target="about">
+      <svg viewBox="0 0 24 24" width="21" height="21" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.15" fill="currentColor"/></svg>
+      <span>About</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Toast for copy/share fallback -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>
