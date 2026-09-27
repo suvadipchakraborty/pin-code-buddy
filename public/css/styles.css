@@ -336,6 +336,7 @@ body {
 .results { margin-top: 28px; }
 
 .state { display: block; }
+.state[hidden] { display: none; }
 
 .state-empty, .state-error {
   text-align: center;
