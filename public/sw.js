@@ -3,7 +3,7 @@
 // offline), while PIN lookups themselves always go to the network first
 // since post office data should stay fresh.
 
-const CACHE_NAME = "pin-buddy-v1";
+const CACHE_NAME = "pin-buddy-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
